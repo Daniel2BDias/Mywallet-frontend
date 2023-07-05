@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import logout from "../assets/logout.svg";
 import { CgAdd, CgRemove } from "react-icons/cg";
-import Entry from "../components/Entry";
+import Entry from "../components/Entry.jsx";
 import AuthContext from "../context/AuthContext.jsx";
 
 const Home = () => {
@@ -20,7 +20,7 @@ const Home = () => {
     try {
       if (auth) {
         const promise = await axios.get(
-          `${process.env.VITE_APP_API_URI}/transactions`,
+          `${import.meta.env.VITE_API_URL}/transactions`,
           { headers: { authorization: `Bearer ${auth?.token}` } }
         );
 
@@ -50,7 +50,7 @@ const Home = () => {
           src={logout}
           onClick={() => {
             axios
-              .delete(`${process.env.VITE_APP_API_URI}/logout/`, {
+              .delete(`${import.meta.env.VITE_API_URL}/logout/`, {
                 headers: { authorization: `Bearer ${auth?.token}` },
               })
               .then(() => {

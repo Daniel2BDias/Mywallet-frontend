@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useEffect, useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "../context/AuthContext.jsx";
 
 const Transaction = () => {
     const { tipo } = useParams();
@@ -23,11 +23,11 @@ const Transaction = () => {
         e.preventDefault();
 
         if(tipo === "entrada"){
-        const promise = axios.post(`${process.env.REACT_APP_API_URI}/nova-transacao/add`, body, { headers: { Authorization: `Bearer ${auth.token}` }});
+        const promise = axios.post(`${import.meta.env.VITE_API_URL}/nova-transacao/add`, body, { headers: { Authorization: `Bearer ${auth.token}` }});
         promise.then((res) => {navigate("/home")});
         promise.catch(err => alert(`${err.response.data}`));
         } else {
-            const promise = axios.post(`${process.env.REACT_APP_API_URI}/nova-transacao/subtract`, body, { headers: { Authorization: `Bearer ${auth.token}` }});
+            const promise = axios.post(`${import.meta.env.VITE_API_URL}/nova-transacao/subtract`, body, { headers: { Authorization: `Bearer ${auth.token}` }});
         promise.then((res) => {navigate("/home")});
         promise.catch(err => alert(`${err.response.data}`));
         }

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { CgTrash } from "react-icons/cg";
 import { useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "../context/AuthContext.jsx";
 import axios from "axios";
 
 const Entry = ({ date, title, value, type }) => {

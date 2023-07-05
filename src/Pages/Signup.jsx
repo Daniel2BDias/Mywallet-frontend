@@ -17,7 +17,7 @@ const Signup = () => {
         e.preventDefault();
         if(password !== confirmPass){return alert("As senhas são diferentes")};
         
-        const promise = axios.post(`${process.env.REACT_APP_API_URI}/cadastro`, body);
+        const promise = axios.post(`${import.meta.env.VITE_API_URL}/cadastro`, body);
         promise.then(() => navigate("/"));
         promise.catch((err) => alert(`${err.response.data}`), setName(""), setEmail(""), setPassword(""), setConfirm(""));
     };

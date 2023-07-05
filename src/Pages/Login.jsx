@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useContext, useEffect } from "react";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "../context/AuthContext.jsx";
 
 const Login = () => {
   const [name, setName] = useState("");
@@ -18,7 +18,7 @@ const Login = () => {
 
   function login(e) {
     e.preventDefault();
-    const promise = axios.post(`${process.env.REACT_APP_API_URI}/login`, body);
+    const promise = axios.post(`${import.meta.env.VITE_API_URL}/login`, body);
     promise.then((res) => {
       loginAuth(res.data);
       setAuth(res.data);
