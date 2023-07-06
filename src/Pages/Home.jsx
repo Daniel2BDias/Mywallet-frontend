@@ -51,7 +51,7 @@ const Home = () => {
           src={logout}
           onClick={() => {
             axios
-              .delete(`${import.meta.env.VITE_API_URL}/logout/`, {
+              .post(`${import.meta.env.VITE_API_URL}/logout/`, {
                 headers: { authorization: `Bearer ${auth?.token}` },
               })
               .then(() => {
