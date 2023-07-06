@@ -13,7 +13,8 @@ const Home = () => {
   const { auth, setAuth } = useContext(AuthContext);
 
   useEffect(() => {
-    authVerification(auth);
+    if(!auth) return
+      authVerification(auth);
   }, [entrys]);
 
   async function authVerification(auth) {
@@ -30,7 +31,7 @@ const Home = () => {
 
     navigate("/");
     } catch (error) {
-      alert(`${error.message}`);
+    
     }
   }
 
@@ -54,8 +55,8 @@ const Home = () => {
                 headers: { authorization: `Bearer ${auth?.token}` },
               })
               .then(() => {
-                setAuth(null);
                 navigate("/");
+                setAuth(null);
                 localStorage.setItem("auth", null);
               })
               .catch((err) => alert("Erro"));

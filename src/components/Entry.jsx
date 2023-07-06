@@ -24,18 +24,11 @@ const Entry = ({ date, title, value, type }) => {
     };
   
     try {
-      await axios.post(`${process.env.REACT_APP_API_URI}/delete-entry`, body, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/delete-entry`, body, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
-      const transactions = await axios.get(
-          `${process.env.REACT_APP_API_URI}/transactions`,
-          { headers: { authorization: `Bearer ${token}` } }
-        );
-  
-        setEntrys(transactions);
     } catch (error) {
-      alert(error.response.statusText + "  Error: " + error.response.status);
+      alert(error);
     }
   }
 
