@@ -14,7 +14,7 @@ const Home = () => {
 
   useEffect(() => {
       authVerification(auth);
-  }, [entrys]);
+  }, []);
 
   async function authVerification(auth) {
     try {
