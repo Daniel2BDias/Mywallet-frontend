@@ -9,7 +9,7 @@ const Entry = ({ date, title, value, type }) => {
 
   const token = auth?.token;
 
-  async function deleteEntry(token, date, title, value, type, setEntrys) {
+  async function deleteEntry(token, date, title, value, type) {
     const confirmation = window.confirm("Deseja deletar esta entrada?");
 
     if(!confirmation) return;
@@ -24,11 +24,13 @@ const Entry = ({ date, title, value, type }) => {
     };
   
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/delete-entry`, body, {
+      const promise = await axios.post(`${import.meta.env.VITE_API_URL}/delete-entry`, body, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      if(promise.status === 200) window.location.reload();
     } catch (error) {
-      alert(error);
+      alert(error.message);
     }
   }
 
