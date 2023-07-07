@@ -13,7 +13,6 @@ const Home = () => {
   const { auth, setAuth } = useContext(AuthContext);
 
   useEffect(() => {
-    if(!auth) return
       authVerification(auth);
   }, [entrys]);
 

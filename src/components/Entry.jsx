@@ -35,9 +35,9 @@ const Entry = ({ date, title, value, type }) => {
   return (
     <Body type={type}>
       <p>
-        <span>{date}</span><span data-test="registry-name">{title}</span>
+        <span>{date}</span><p data-test="registry-name">{title}</p>
       </p>
-      <p data-test="registry-amount">$ {value}</p>
+      <p className="balance" data-test="registry-amount">$ {value}</p>
       <CgTrash
         data-test="registry-delete"
         className="trash"
@@ -56,9 +56,10 @@ const Body = styled.div`
   align-items: center;
   background-color: white;
   width: 90%;
+  max-width: 326px;
   margin: 10px 5px;
 
-  p:nth-child(2) {
+  .balance {
     color: ${(props) => (props.type === "add" ? "#03AC00" : "#C70000")};
   }
 
@@ -72,6 +73,12 @@ const Body = styled.div`
   span:first-child {
     color: #c6c6c6;
     font-size: 16px;
+  }
+
+  p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .trash {
