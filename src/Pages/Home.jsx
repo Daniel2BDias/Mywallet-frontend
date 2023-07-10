@@ -8,7 +8,7 @@ import Entry from "../components/Entry.jsx";
 import AuthContext from "../context/AuthContext.jsx";
 
 const Home = () => {
-  const [entrys, setEntrys] = useState(undefined);
+  const [entrys, setEntrys] = useState([]);
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
 
@@ -38,7 +38,8 @@ const Home = () => {
   entrys?.forEach((e) =>
     e.type === "subtract" ? (aux -= Number(e.value)) : (aux += Number(e.value))
   );
-  const saldo = aux.toFixed(2);
+  const saldo = aux.toFixed(2).replace(".", ",");
+  const saldoProp = aux;
 
   return (
     <HomePage>
@@ -63,7 +64,7 @@ const Home = () => {
         />
       </Header>
       <Log>
-        {entrys === undefined || entrys.length === 0 ? (
+        {entrys.length === 0 ? (
           <Reg>
             Não há registros de <br />
             entrada ou saída
@@ -80,9 +81,9 @@ const Home = () => {
                   value={e.value}
                   type={e.type}
                 />
-              ))}
+              )).reverse()}
             </div>
-            <Saldo color={saldo}>
+            <Saldo color={saldoProp}>
               <span>Saldo</span>
               <p data-test="total-amount">{saldo}</p>
             </Saldo>

@@ -39,7 +39,7 @@ const Entry = ({ date, title, value, type }) => {
       <p>
         <span>{date}</span><p data-test="registry-name">{title}</p>
       </p>
-      <p className="balance" data-test="registry-amount">$ {value}</p>
+      <p className="balance" data-test="registry-amount">$ {value.toString().replace(".", ",")}</p>
       <CgTrash
         data-test="registry-delete"
         className="trash"
