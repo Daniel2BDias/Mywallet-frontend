@@ -24,7 +24,7 @@ const Entry = ({ date, title, value, type }) => {
     };
   
     try {
-      const promise = await axios.post(`${import.meta.env.VITE_API_URL}/delete-entry`, body, {
+      const promise = await axios.delete(`${import.meta.env.VITE_API_URL}/delete-entry`, body, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

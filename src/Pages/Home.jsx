@@ -99,7 +99,7 @@ const Home = () => {
             Entrada
           </p>
         </button>
-        <button data-test="new-expense" onClick={() => navigate("/nova-transacao/saída")}>
+        <button data-test="new-expense" onClick={() => navigate("/nova-transacao/saida")}>
           <CgRemove className="remove" />
           <p>
             Nova <br />
