@@ -37,7 +37,7 @@ const Transaction = () => {
         <Body>
         <Header><h1>Nova {tipo}</h1> </Header>
         <Form onSubmit={salvar}>
-        <input data-test="registry-amount-input" type="number" step="0.01" name="value" placeholder="Valor" value={value} onChange={(e) => {setBody({...body, [e.target.name]: e.target.value}); setValue(e.target.value)}}required></input>
+        <input data-test="registry-amount-input" type="number" step="0.01" min="0" name="value" placeholder="Valor" value={value} onChange={(e) => {setBody({...body, [e.target.name]: e.target.value}); setValue(e.target.value)}}required></input>
         <input data-test="registry-name-input" type="text" name="description" placeholder="Descrição" value={description} onChange={(e) => {setBody({...body, [e.target.name]: e.target.value}); setDescription(e.target.value)}}required></input>
         <button data-test="registry-save" type="submit">Salvar {tipo}</button>
         </Form>

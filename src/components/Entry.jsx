@@ -34,10 +34,14 @@ const Entry = ({ date, title, value, type }) => {
     }
   }
 
+  async function editEntry(token, date, title, value, type) {
+
+  };
+
   return (
     <Body type={type}>
       <p>
-        <span>{date}</span><p data-test="registry-name">{title}</p>
+        <span>{date}</span><p data-test="registry-name" onClick={() => (editEntry(token, date, title, value, type))}>{title}</p>
       </p>
       <p className="balance" data-test="registry-amount">{value.toString().replace(".", ",")}</p>
       <CgTrash
