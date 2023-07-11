@@ -40,9 +40,9 @@ const Entry = ({ date, title, value, type }) => {
 
   return (
     <Body type={type}>
-      <p>
-        <span>{date}</span><p data-test="registry-name" onClick={() => (editEntry(token, date, title, value, type))}>{title}</p>
-      </p>
+      <div className="info">
+        <span>{date}</span><div className="description" data-test="registry-name" onClick={() => (editEntry(token, date, title, value, type))}>{title}</div>
+      </div>
       <p className="balance" data-test="registry-amount">{value.toString().replace(".", ",")}</p>
       <CgTrash
         data-test="registry-delete"
@@ -67,6 +67,7 @@ const Body = styled.div`
 
   .balance {
     color: ${(props) => (props.type === "add" ? "#03AC00" : "#C70000")};
+    margin-right: 20px;
   }
 
   p,
@@ -79,17 +80,24 @@ const Body = styled.div`
   span:first-child {
     color: #c6c6c6;
     font-size: 16px;
+    margin-right: 10px;
   }
 
-  p {
+  .description {
+    width: 100px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   }
 
+  .info {
+    display: flex;
+  }
+
   .trash {
     margin: 0;
     padding: 0;
+    font-size: 20px;
   }
 
   .trash:hover {
