@@ -67,7 +67,6 @@ const Body = styled.div`
 
   .balance {
     color: ${(props) => (props.type === "add" ? "#03AC00" : "#C70000")};
-    margin-right: 20px;
   }
 
   p,
@@ -84,7 +83,7 @@ const Body = styled.div`
   }
 
   .description {
-    width: 100px;
+    width: 120px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -96,8 +95,9 @@ const Body = styled.div`
 
   .trash {
     margin: 0;
+    margin-left: 5px;
     padding: 0;
-    font-size: 20px;
+    font-size: 20px !important;
   }
 
   .trash:hover {
