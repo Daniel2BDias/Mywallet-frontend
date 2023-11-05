@@ -6,6 +6,7 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import GlobalStyles from "./GlobalStyles/GlobalStyles.js";
 import ResetStyle from "./GlobalStyles/ResetStyles.js";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import EditEntry from "./Pages/EditEntry.jsx";
 
 
 function App() {
@@ -19,7 +20,8 @@ function App() {
           <Route path="/" element={<Login/>}></Route>
           <Route path="/Cadastro" element={<Signup/>}></Route>
           <Route path="/Home" element={<Home/>}></Route>
-          <Route path="/nova-transacao/:tipo" element={<Transaction/>}></Route>
+          <Route path="/nova-transacao/:type" element={<Transaction/>}></Route>
+          <Route path="/editar/:type/:id" element={<EditEntry/>}></Route>
         </Routes>
       </BrowserRouter>
       </AuthProvider>

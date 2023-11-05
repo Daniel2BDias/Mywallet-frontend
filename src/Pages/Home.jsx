@@ -13,7 +13,7 @@ const Home = () => {
   const { auth, setAuth } = useContext(AuthContext);
 
   useEffect(() => {
-      authVerification(auth);
+    authVerification(auth);
   }, []);
 
   async function authVerification(auth) {
@@ -24,20 +24,20 @@ const Home = () => {
           { headers: { authorization: `Bearer ${auth?.token}` } }
         );
 
-      setEntrys(promise.data);
-      return
-    }
+        setEntrys(promise.data);
+        return;
+      }
 
-    navigate("/");
-    } catch (error) {
-    
-    }
+      navigate("/");
+    } catch (error) {}
   }
 
   let aux = 0;
-  entrys?.forEach((e) =>
-    e.type === "subtract" ? (aux -= Number(e.value)) : (aux += Number(e.value))
-  );
+  entrys?.forEach((e) => {
+    e.transaction.type === "subtract"
+      ? (aux -= Number(e.transaction.value))
+      : (aux += Number(e.transaction.value))
+});
   const saldo = aux.toFixed(2).replace(".", ",");
   const saldoProp = aux;
 
@@ -72,16 +72,19 @@ const Home = () => {
         ) : (
           <>
             <div>
-              {entrys.map((e, i) => (
-                <Entry
-                  key={i}
-                  setEntrys={setEntrys}
-                  date={e.date}
-                  title={e.description}
-                  value={e.value}
-                  type={e.type}
-                />
-              )).reverse()}
+              {entrys
+                .map((e, i) => (
+                  <Entry
+                    key={i}
+                    id={e._id}
+                    setEntrys={setEntrys}
+                    date={e.transaction.date}
+                    title={e.transaction.description}
+                    value={e.transaction.value}
+                    type={e.transaction.type}
+                  />
+                ))
+                .reverse()}
             </div>
             <Saldo color={saldoProp}>
               <span>Saldo</span>
@@ -91,7 +94,10 @@ const Home = () => {
         )}
       </Log>
       <Options>
-        <button data-test="new-income" onClick={() => navigate("/nova-transacao/entrada")}>
+        <button
+          data-test="new-income"
+          onClick={() => navigate("/nova-transacao/entrada")}
+        >
           <CgAdd className="add" />
           <p>
             Nova
@@ -99,7 +105,10 @@ const Home = () => {
             Entrada
           </p>
         </button>
-        <button data-test="new-expense" onClick={() => navigate("/nova-transacao/saida")}>
+        <button
+          data-test="new-expense"
+          onClick={() => navigate("/nova-transacao/saida")}
+        >
           <CgRemove className="remove" />
           <p>
             Nova <br />

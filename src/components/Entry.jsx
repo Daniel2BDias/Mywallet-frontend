@@ -3,51 +3,56 @@ import { CgTrash } from "react-icons/cg";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Entry = ({ date, title, value, type }) => {
+const Entry = ({ id, date, title, value, type }) => {
   const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const token = auth?.token;
 
-  async function deleteEntry(token, date, title, value, type) {
+  async function deleteEntry(token, id) {
     const confirmation = window.confirm("Deseja deletar esta entrada?");
 
-    if(!confirmation) return;
+    if (!confirmation) return;
 
-    const body = {
-      transaction: {
-        value: value,
-        description: title,
-        type: type,
-        date: date,
-      },
-    };
-  
     try {
-      const promise = await axios.delete(`${import.meta.env.VITE_API_URL}/delete-entry`, body, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if(promise.status === 200) window.location.reload();
+      const promise = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/delete-entry/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      if (promise.status === 204) window.location.reload();
     } catch (error) {
       alert(error.message);
     }
   }
 
-  async function editEntry(token, date, title, value, type) {
-
-  };
-
   return (
-    <Body type={type}>
+    <Body
+      type={type}
+      onClick={() =>
+        navigate(`/editar/${type === "add" ? "entrada" : "saida"}/${id}`)
+      }
+    >
       <div className="info">
-        <span>{date}</span><div className="description" data-test="registry-name" onClick={() => (editEntry(token, date, title, value, type))}>{title}</div>
+        <span>{date}</span>
+        <div className="description" data-test="registry-name">
+          {title}
+        </div>
       </div>
-      <p className="balance" data-test="registry-amount">{value.toString().replace(".", ",")}</p>
+      <p className="balance" data-test="registry-amount">
+        {value.toString().replace(".", ",")}
+      </p>
       <CgTrash
         data-test="registry-delete"
         className="trash"
-        onClick={() => deleteEntry(token, date, title, value, type)}
+        onClick={(e) => {
+          e.stopPropagation();
+          deleteEntry(token, id);
+        }}
       />
     </Body>
   );

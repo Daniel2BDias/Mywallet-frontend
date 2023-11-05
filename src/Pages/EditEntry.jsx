@@ -5,8 +5,8 @@ import axios from "axios";
 import { useEffect, useContext } from "react";
 import AuthContext from "../context/AuthContext.jsx";
 
-const Transaction = () => {
-  const { type } = useParams();
+const editEntry = () => {
+  const { type, id } = useParams();
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
   const [value, setValue] = useState("");
@@ -19,12 +19,12 @@ const Transaction = () => {
     }
   }, []);
 
-  function salvar(e) {
+  function edit(e) {
     e.preventDefault();
 
     if (type === "entrada") {
-      const promise = axios.post(
-        `${import.meta.env.VITE_API_URL}/nova-transacao/add`,
+      const promise = axios.put(
+        `${import.meta.env.VITE_API_URL}/edit-entry/add/${id}`,
         body,
         { headers: { Authorization: `Bearer ${auth.token}` } }
       );
@@ -33,8 +33,8 @@ const Transaction = () => {
       });
       promise.catch((err) => alert(`${err.response.data}`));
     } else {
-      const promise = axios.post(
-        `${import.meta.env.VITE_API_URL}/nova-transacao/subtract`,
+      const promise = axios.put(
+        `${import.meta.env.VITE_API_URL}/edit-entry/subtract/${id}`,
         body,
         { headers: { Authorization: `Bearer ${auth.token}` } }
       );
@@ -48,9 +48,9 @@ const Transaction = () => {
   return (
     <Body>
       <Header>
-        <h1>Nova {type === "entrada" ? "entrada" : "saída"}</h1>{" "}
+        <h1>Editar {type === "entrada" ? "entrada" : "saída"}</h1>{" "}
       </Header>
-      <Form onSubmit={salvar}>
+      <Form onSubmit={edit}>
         <input
           type="number"
           step="0.01"
@@ -84,7 +84,7 @@ const Transaction = () => {
   );
 };
 
-export default Transaction;
+export default editEntry;
 
 const Body = styled.div`
   display: flex;
