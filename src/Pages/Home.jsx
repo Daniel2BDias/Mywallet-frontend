@@ -211,6 +211,7 @@ const Options = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
+    text-align: justify;
     margin: 20px 9px 9px 9px;
     background-color: #a328d6;
     padding: 15px;
