@@ -27,9 +27,12 @@ const Entry = ({ id, date, title, value, type }) => {
   return (
     <Body
       type={type}
-      onClick={() =>
+      onClick={(e) => {
+        e.stopPropagation();
+        const confirm = window.confirm("Would like to edit this entry?");
+        if (!confirm) return;
         navigate(`/edit/${type === "add" ? "income" : "expense"}/${id}`)
-      }
+      }}
     >
       <div className="info">
         <span>{date}</span>
