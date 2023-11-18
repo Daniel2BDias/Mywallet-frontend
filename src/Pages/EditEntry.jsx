@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useEffect, useContext } from "react";
+import Form from "../components/Form/Form.jsx";
 import AuthContext from "../context/AuthContext.jsx";
+import AuthButton from "../components/Buttons/authButtons/AuthButton.jsx";
+import MOTD from "../components/MOTD.jsx";
+import AuthInput from "../components/Inputs/AuthInput.jsx";
+import { transactionsAPI } from "../api/transactions/transactionsAPI.js";
 
 const editEntry = () => {
   const { type, id } = useParams();
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
-  const [value, setValue] = useState("");
-  const [description, setDescription] = useState("");
-  const [body, setBody] = useState({});
+  const value = useRef();
+  const description = useRef();
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     if (!auth || !auth.token) {
@@ -19,66 +24,65 @@ const editEntry = () => {
     }
   }, []);
 
-  function edit(e) {
+  async function edit(e) {
     e.preventDefault();
+    const body = {
+      value: value.current.value,
+      description: description.current.value,
+    };
 
-    if (type === "entrada") {
-      const promise = axios.put(
-        `${import.meta.env.VITE_API_URL}/edit-entry/add/${id}`,
-        body,
-        { headers: { Authorization: `Bearer ${auth.token}` } }
-      );
-      promise.then((res) => {
-        navigate("/home");
-      });
-      promise.catch((err) => alert(`${err.response.data}`));
+    setDisabled(true);
+
+    if (type === "income") {
+      try {
+      await transactionsAPI.editIncome(id, body, auth);
+      navigate("/home");
+    } catch (err) {
+        alert(`${err.response.data}`);
+        setDisabled(false);
+    };
     } else {
-      const promise = axios.put(
-        `${import.meta.env.VITE_API_URL}/edit-entry/subtract/${id}`,
-        body,
-        { headers: { Authorization: `Bearer ${auth.token}` } }
-      );
-      promise.then((res) => {
+      transactionsAPI.editExpense(id, body, auth).then((res) => {
         navigate("/home");
+      })
+      .catch((err) => {
+        alert(`${err.response.data}`);
+        setDisabled(false);
       });
-      promise.catch((err) => alert(`${err.response.data}`));
     }
   }
 
   return (
     <Body>
       <Header>
-        <h1>Editar {type === "entrada" ? "entrada" : "saída"}</h1>{" "}
+        <h1>Edit {type === "income" ? type : "expense"}</h1>{" "}
       </Header>
-      <Form onSubmit={edit}>
-        <input
+      <Form func={edit}>
+        <AuthInput
           type="number"
+          ref={value}
           step="0.01"
           min="0"
           name="value"
-          placeholder="Valor"
-          value={value}
-          onChange={(e) => {
-            setBody({ ...body, [e.target.name]: e.target.value });
-            setValue(e.target.value);
-          }}
+          placeholder="Amount"
+          disabled={disabled}
           required
-        ></input>
-        <input
+        ></AuthInput>
+        <AuthInput
           type="text"
+          ref={description}
           name="description"
-          placeholder="Descrição"
-          value={description}
-          onChange={(e) => {
-            setBody({ ...body, [e.target.name]: e.target.value });
-            setDescription(e.target.value);
-          }}
+          placeholder="Description"
+          disabled={disabled}
           required
-        ></input>
-        <button type="submit">
-          Salvar {type === "entrada" ? "entrada" : "saída"}
-        </button>
-        <p onClick={() => navigate(-1)}>Cancelar</p>
+        ></AuthInput>
+        <AuthButton
+          action={`Save ${type === "income" ? type : "Expense"}`}
+          loading={"Saving..."}
+          disabled={disabled}
+          type="submit"
+        />
+        {disabled ? null : <MOTD navigate={() => navigate(-1)} text={"Cancel"} />}
       </Form>
     </Body>
   );
@@ -90,37 +94,6 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  input {
-    width: 326px;
-    height: 58px;
-    border-radius: 5px;
-    margin: 7px;
-    border: none;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
-  button {
-    width: 330px;
-    height: 58px;
-    border-radius: 5px;
-    margin: 7px;
-    border: none;
-    color: white;
-    background-color: #a328d6;
-    font-size: 20px;
-    font-weight: 700;
-    box-sizing: border-box;
-  }
-
-  button:hover {
-    cursor: pointer;
-  }
-
-  button:active {
-    transform: scale(0.97);
-  }
 
   p {
     color: white;
@@ -136,10 +109,4 @@ const Header = styled.div`
   color: white;
   font-size: 26px;
   font-weight: 700;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;

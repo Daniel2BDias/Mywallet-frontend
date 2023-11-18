@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { CgTrash } from "react-icons/cg";
+import { CgTrashEmpty } from "react-icons/cg";
 import { useContext } from "react";
-import AuthContext from "../context/AuthContext.jsx";
-import axios from "axios";
+import AuthContext from "../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { transactionsAPI } from "../../api/transactions/transactionsAPI.js";
 
 const Entry = ({ id, date, title, value, type }) => {
   const { auth } = useContext(AuthContext);
@@ -12,18 +12,12 @@ const Entry = ({ id, date, title, value, type }) => {
   const token = auth?.token;
 
   async function deleteEntry(token, id) {
-    const confirmation = window.confirm("Deseja deletar esta entrada?");
+    const confirmation = window.confirm("Would you like to delete this entry?");
 
     if (!confirmation) return;
 
     try {
-      const promise = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/delete-entry/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      
+      const promise = await transactionsAPI.deleteEntry(id, token);
       if (promise.status === 204) window.location.reload();
     } catch (error) {
       alert(error.message);
@@ -34,21 +28,19 @@ const Entry = ({ id, date, title, value, type }) => {
     <Body
       type={type}
       onClick={() =>
-        navigate(`/editar/${type === "add" ? "entrada" : "saida"}/${id}`)
+        navigate(`/edit/${type === "add" ? "income" : "expense"}/${id}`)
       }
     >
       <div className="info">
         <span>{date}</span>
-        <div className="description" data-test="registry-name">
+        <div className="description">
           {title}
         </div>
       </div>
-      <p className="balance" data-test="registry-amount">
+      <p className="balance">
         {value.toString().replace(".", ",")}
       </p>
-      <CgTrash
-        data-test="registry-delete"
-        className="trash"
+      <DeleteIcon
         onClick={(e) => {
           e.stopPropagation();
           deleteEntry(token, id);
@@ -66,12 +58,17 @@ const Body = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: white;
-  width: 90%;
+  width: 96.5%;
   max-width: 326px;
   margin: 10px 5px;
 
   .balance {
     color: ${(props) => (props.type === "add" ? "#03AC00" : "#C70000")};
+    width: 100%;
+    text-align: right;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   p,
@@ -97,15 +94,16 @@ const Body = styled.div`
   .info {
     display: flex;
   }
-
-  .trash {
-    margin: 0;
-    margin-left: 5px;
-    padding: 0;
-    font-size: 20px !important;
-  }
-
-  .trash:hover {
-    cursor: pointer;
-  }
 `;
+
+const DeleteIcon = styled(CgTrashEmpty)`
+margin: 0;
+margin-left: 5px;
+padding: 0;
+font-size: 20px !important;
+min-width: 20px;
+
+&:hover {
+  cursor: pointer;
+}
+`

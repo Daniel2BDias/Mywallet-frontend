@@ -1,120 +1,51 @@
 import styled from "styled-components";
-import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import logout from "../assets/logout.svg";
-import { CgAdd, CgRemove } from "react-icons/cg";
-import Entry from "../components/Entry.jsx";
 import AuthContext from "../context/AuthContext.jsx";
+import { authAPI } from "../api/auth/authAPI.js";
+import { authVerification } from "../utils/authVerification.js";
+import { calculateBalance } from "../utils/calculateBalance.js";
+import Options from "../components/Buttons/transactionButtons/transactionOptions.jsx";
+import TransactionButton from "../components/Buttons/transactionButtons/transactionButton.jsx";
+import Reg from "../components/RegLogMessage.jsx";
+import Balance from "../components/BalanceLog.jsx";
+import Entries from "../components/Entries/EntriesLog.jsx";
 
 const Home = () => {
-  const [entrys, setEntrys] = useState([]);
+  const [entries, setEntries] = useState([]);
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
 
   useEffect(() => {
-    authVerification(auth);
+    authVerification(auth, navigate, setEntries);
   }, []);
 
-  async function authVerification(auth) {
-    try {
-      if (auth) {
-        const promise = await axios.get(
-          `${import.meta.env.VITE_API_URL}/transactions`,
-          { headers: { authorization: `Bearer ${auth?.token}` } }
-        );
-
-        setEntrys(promise.data);
-        return;
-      }
-
-      navigate("/");
-    } catch (error) {}
-  }
-
-  let aux = 0;
-  entrys?.forEach((e) => {
-    e.transaction.type === "subtract"
-      ? (aux -= Number(e.transaction.value))
-      : (aux += Number(e.transaction.value))
-});
-  const saldo = aux.toFixed(2).replace(".", ",");
-  const saldoProp = aux;
+  const balance = calculateBalance(entries);
 
   return (
     <HomePage>
       <Header>
-        <p data-test="user-name">Olá, {auth?.name}</p>
+        <p>Hi, {auth?.name}</p>
         <img
-          data-test="logout"
           alt="logout"
           src={logout}
-          onClick={() => {
-            axios
-              .post(`${import.meta.env.VITE_API_URL}/logout/`, {
-                headers: { authorization: `Bearer ${auth?.token}` },
-              })
-              .then(() => {
-                navigate("/");
-                setAuth(null);
-                localStorage.setItem("auth", null);
-              })
-              .catch((err) => alert("Erro"));
-          }}
+          onClick={() => authAPI.logout(auth, setAuth, navigate)}
         />
       </Header>
       <Log>
-        {entrys.length === 0 ? (
-          <Reg>
-            Não há registros de <br />
-            entrada ou saída
-          </Reg>
+        {entries.length === 0 ? (
+          <Reg />
         ) : (
           <>
-            <div>
-              {entrys
-                .map((e, i) => (
-                  <Entry
-                    key={i}
-                    id={e._id}
-                    setEntrys={setEntrys}
-                    date={e.transaction.date}
-                    title={e.transaction.description}
-                    value={e.transaction.value}
-                    type={e.transaction.type}
-                  />
-                ))
-                .reverse()}
-            </div>
-            <Saldo color={saldoProp}>
-              <span>Saldo</span>
-              <p data-test="total-amount">{saldo}</p>
-            </Saldo>
+            <Entries entries={entries} />
+            <Balance balance={balance} />
           </>
         )}
       </Log>
       <Options>
-        <button
-          data-test="new-income"
-          onClick={() => navigate("/nova-transacao/entrada")}
-        >
-          <CgAdd className="add" />
-          <p>
-            Nova
-            <br />
-            Entrada
-          </p>
-        </button>
-        <button
-          data-test="new-expense"
-          onClick={() => navigate("/nova-transacao/saida")}
-        >
-          <CgRemove className="remove" />
-          <p>
-            Nova <br />
-            Saída
-          </p>
-        </button>
+        <TransactionButton navigate={navigate} type={"income"} />
+        <TransactionButton navigate={navigate} type={"expense"} />
       </Options>
     </HomePage>
   );
@@ -150,94 +81,16 @@ const HomePage = styled.div`
   align-items: center;
 `;
 
-const Reg = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #868686;
-  font-size: 20px;
-  text-align: center;
-`;
-
 const Log = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  overflow-Y: scroll;
   height: 100%;
   width: 326px;
   padding: 15px 0;
   background-color: white;
   border-radius: 8px;
-
-  div {
-    width: 95%;
-    background-color: white;
-  }
-`;
-
-const Saldo = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  background-color: white;
-  padding: 10px;
-
-  span,
-  p {
-    background-color: white;
-  }
-
-  span {
-    font-size: 17px;
-    font-weight: 700;
-  }
-
-  p {
-    color: ${(props) =>
-      props.color > 0 ? "#03AC00" : props.color === 0 ? "000000" : "#C70000"};
-  }
-`;
-
-const Options = styled.div`
-  display: flex;
-
-  button {
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    text-align: justify;
-    margin: 20px 9px 9px 9px;
-    background-color: #a328d6;
-    padding: 15px;
-    border: none;
-    border-radius: 5px;
-    height: 114px;
-    width: 155px;
-    font-size: 17px;
-    font-weight: 700;
-
-    .add,
-    .remove {
-      font-size: 20px;
-      text-align: left;
-    }
-  }
-
-  p {
-    background-color: #a328d6;
-  }
-
-  button:hover {
-    cursor: pointer;
-  }
-
-  button:active {
-    transform: scale(0.97);
-  }
 `;

@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
 import { useEffect, useContext } from "react";
 import AuthContext from "../context/AuthContext.jsx";
+import { transactionsAPI } from "../api/transactions/transactionsAPI.js";
+import AuthButton from "../components/Buttons/authButtons/AuthButton.jsx";
+import AuthInput from "../components/Inputs/AuthInput.jsx";
+import MOTD from "../components/MOTD.jsx";
 
 const Transaction = () => {
   const { type } = useParams();
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
-  const [value, setValue] = useState("");
-  const [description, setDescription] = useState("");
-  const [body, setBody] = useState({});
+  const [disabled, setDisabled] = useState(false);
+  const value = useRef();
+  const description = useRef();
 
   useEffect(() => {
     if (!auth || !auth.token) {
@@ -22,63 +25,67 @@ const Transaction = () => {
   function salvar(e) {
     e.preventDefault();
 
-    if (type === "entrada") {
-      const promise = axios.post(
-        `${import.meta.env.VITE_API_URL}/nova-transacao/add`,
-        body,
-        { headers: { Authorization: `Bearer ${auth.token}` } }
-      );
-      promise.then((res) => {
-        navigate("/home");
-      });
-      promise.catch((err) => alert(`${err.response.data}`));
+    const body = {
+      value: value.current.value,
+      description: description.current.value,
+    };
+
+    setDisabled(true);
+
+    if (type === "income") {
+      transactionsAPI
+        .postIncome(auth?.token, body)
+        .then((res) => {
+          navigate("/home");
+        })
+        .catch((err) => {
+          alert(`${err.response.data}`);
+          setDisabled(false);
+        });
     } else {
-      const promise = axios.post(
-        `${import.meta.env.VITE_API_URL}/nova-transacao/subtract`,
-        body,
-        { headers: { Authorization: `Bearer ${auth.token}` } }
-      );
-      promise.then((res) => {
-        navigate("/home");
-      });
-      promise.catch((err) => alert(`${err.response.data}`));
+      transactionsAPI
+        .postExpense(auth?.token, body)
+        .then((res) => {
+          navigate("/home");
+        })
+        .catch((err) => {
+          alert(`${err.response.data}`);
+          setDisabled(false);
+        });
     }
   }
 
   return (
     <Body>
       <Header>
-        <h1>Nova {type === "entrada" ? "entrada" : "saída"}</h1>{" "}
+        <h1>New {type === "income" ? type : "expense"}</h1>
       </Header>
       <Form onSubmit={salvar}>
-        <input
+        <AuthInput
           type="number"
+          ref={value}
+          disabled={disabled}
           step="0.01"
           min="0"
           name="value"
-          placeholder="Valor"
-          value={value}
-          onChange={(e) => {
-            setBody({ ...body, [e.target.name]: e.target.value });
-            setValue(e.target.value);
-          }}
+          placeholder="Amount"
           required
-        ></input>
-        <input
+        ></AuthInput>
+        <AuthInput
           type="text"
+          ref={description}
+          disabled={disabled}
           name="description"
-          placeholder="Descrição"
-          value={description}
-          onChange={(e) => {
-            setBody({ ...body, [e.target.name]: e.target.value });
-            setDescription(e.target.value);
-          }}
+          placeholder="Description"
           required
-        ></input>
-        <button type="submit">
-          Salvar {type === "entrada" ? "entrada" : "saída"}
-        </button>
-        <p onClick={() => navigate(-1)}>Cancelar</p>
+        ></AuthInput>
+        <AuthButton
+          disabled={disabled}
+          action={`Save ${type === "entrada" ? "Income" : "Expense"}`}
+          loading={"Saving..."}
+          type="submit"
+        />
+        {disabled ? null : <MOTD navigate={() => navigate(-1)} text={"Cancel"}/>}
       </Form>
     </Body>
   );
@@ -90,37 +97,6 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  input {
-    width: 326px;
-    height: 58px;
-    border-radius: 5px;
-    margin: 7px;
-    border: none;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
-  button {
-    width: 330px;
-    height: 58px;
-    border-radius: 5px;
-    margin: 7px;
-    border: none;
-    color: white;
-    background-color: #a328d6;
-    font-size: 20px;
-    font-weight: 700;
-    box-sizing: border-box;
-  }
-
-  button:hover {
-    cursor: pointer;
-  }
-
-  button:active {
-    transform: scale(0.97);
-  }
 
   p {
     color: white;
