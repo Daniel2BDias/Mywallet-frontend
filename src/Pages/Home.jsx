@@ -55,7 +55,8 @@ export default Home;
 
 const Header = styled.div`
   height: 90px;
-  width: 326px;
+  width: 90%;
+  max-width: 326px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -79,6 +80,16 @@ const HomePage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  ::-webkit-scrollbar {
+     width: .2em;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #8C11BE;
+    border-radius: 10px;
+  }
 `;
 
 const Log = styled.div`
@@ -89,7 +100,8 @@ const Log = styled.div`
   justify-content: space-between;
   overflow-Y: scroll;
   height: 100%;
-  width: 326px;
+  width: 90%;
+  max-width: 326px;
   padding: 15px 0;
   background-color: white;
   border-radius: 8px;

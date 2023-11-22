@@ -11,6 +11,10 @@ const StyledAuthButton = styled.button`
   font-weight: 700;
   margin: 10px 0;
 
+  @media (max-width: 280px) {
+    width: 96%;
+  }
+
   &:disabled {
     opacity: 70%;
     transform: none !important;

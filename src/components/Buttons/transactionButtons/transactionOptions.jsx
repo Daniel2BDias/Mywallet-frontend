@@ -8,4 +8,6 @@ export default function Options ({ children }) {
 
 const StyledOptions = styled.div`
     display: flex;
+    width: 97%;
+    max-width: 346px;
 `;

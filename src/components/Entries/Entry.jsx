@@ -65,6 +65,10 @@ const Body = styled.div`
   max-width: 326px;
   margin: 10px 5px;
 
+  @media (max-width: 280px) {
+    max-width: 224px;
+  }
+
   .balance {
     color: ${(props) => (props.type === "add" ? "#03AC00" : "#C70000")};
     width: 100%;
@@ -88,7 +92,7 @@ const Body = styled.div`
   }
 
   .description {
-    width: 120px;
+    width: 80px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

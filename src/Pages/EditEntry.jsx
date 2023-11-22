@@ -109,4 +109,8 @@ const Header = styled.div`
   color: white;
   font-size: 26px;
   font-weight: 700;
+
+  @media (max-width: 280px) {
+    width: 96%;
+  }
 `;
