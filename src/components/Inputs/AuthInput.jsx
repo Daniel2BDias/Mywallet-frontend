@@ -1,6 +1,7 @@
 import { forwardRef, useState } from "react"
 import StyledAuthInput from "./inputStyles.js";
 import { StyledEyeIcon, StyledEyeOffIcon } from "./styledEyeIcons.js";
+import styled from "styled-components";
 
 export default forwardRef(function AuthInput ({ disabled, type, name, placeholder, setShowPassword, setShowConfirmPassword }, ref) {
     function showPassword () {

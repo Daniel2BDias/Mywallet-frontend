@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const StyledAuthInput = styled.input`
+    position: relative;
     padding: 10px;
     margin: 10px 0;
     border: none;
