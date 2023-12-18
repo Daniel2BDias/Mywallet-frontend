@@ -18,8 +18,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login/>}></Route>
-          <Route path="/Cadastro" element={<Signup/>}></Route>
-          <Route path="/Home" element={<Home/>}></Route>
+          <Route path="/sign-up" element={<Signup/>}></Route>
+          <Route path="/home" element={<Home/>}></Route>
           <Route path="/new-transaction/:type" element={<Transaction/>}></Route>
           <Route path="/edit/:type/:id" element={<EditEntry/>}></Route>
         </Routes>

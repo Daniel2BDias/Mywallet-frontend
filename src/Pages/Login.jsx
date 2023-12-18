@@ -72,8 +72,8 @@ const Login = () => {
       </Form>
       {disabled ? null : (
         <MOTD
-          navigate={() => navigate("/cadastro")}
-          text={"New here? Sign-up!"}
+          navigate={() => navigate("/sign-up")}
+          text={"New here? Sign up!"}
         />
       )}
     </LoginPage>

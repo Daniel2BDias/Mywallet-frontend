@@ -92,7 +92,7 @@ export default function SignUp () {
       {disabled ? null : (
         <MOTD
           navigate={() => navigate("/")}
-          text={"Already Registered? Log In!s"}
+          text={"Already Registered? Log In!"}
         />
       )}
     </SignUpPage>

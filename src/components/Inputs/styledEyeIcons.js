@@ -19,4 +19,8 @@ export const StyledEyeOffIcon = styled(HiOutlineEyeOff)`
   &:hover {
     cursor: pointer;
   }
+
+  @media (max-width: 280px) {
+    translate: ${props => props.name === "password" ? "380% 0%" : "380% 230%"};
+  }
 `;

@@ -12,7 +12,7 @@ const StyledAuthInput = styled.input`
     box-sizing: border-box;
 
     @media (max-width: 280px) {
-      width: 96%;
+      width: 97%;
     }
 
     &::placeholder {
