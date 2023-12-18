@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
 import { useEffect, useContext } from "react";
 import Form from "../components/Form/Form.jsx";
 import AuthContext from "../context/AuthContext.jsx";
