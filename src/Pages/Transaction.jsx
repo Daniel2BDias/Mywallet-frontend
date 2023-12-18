@@ -81,7 +81,7 @@ const Transaction = () => {
         ></AuthInput>
         <AuthButton
           disabled={disabled}
-          action={`Save ${type === "entrada" ? "Income" : "Expense"}`}
+          action={`Save ${type === "income" ? "Income" : "Expense"}`}
           loading={"Saving..."}
           type="submit"
         />

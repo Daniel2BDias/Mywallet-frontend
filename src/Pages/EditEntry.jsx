@@ -77,7 +77,7 @@ const editEntry = () => {
           required
         ></AuthInput>
         <AuthButton
-          action={`Save ${type === "income" ? type : "Expense"}`}
+          action={`Save ${type === "income" ? "Income" : "Expense"}`}
           loading={"Saving..."}
           disabled={disabled}
           type="submit"
